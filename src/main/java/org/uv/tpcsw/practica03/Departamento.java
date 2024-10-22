@@ -1,17 +1,19 @@
 package org.uv.tpcsw.practica03;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javax.annotation.processing.Generated;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "departamentos")
@@ -24,14 +26,25 @@ public class Departamento implements Serializable{
     private long clave;
     private String nombre;
     
-    @OneToMany(mappedBy = "depto")
-    private List<Empleado> empleados = new ArrayList();
+    @OneToMany(mappedBy = "depto", fetch = FetchType.LAZY)
+    private Set<Empleado> empleados;
 
-    public List<Empleado> getEmpleados() {
+    public void addEmpleado(Empleado empleado) {
+        empleados.add(empleado);
+        empleado.setDepto(this);
+    }
+
+    public void removeEmpleado(Empleado empleado) {
+        empleados.remove(empleado);
+        empleado.setDepto(null);
+    }
+
+
+    public Set<Empleado> getEmpleados() {
         return empleados;
     }
 
-    public void setEmpleados(List<Empleado> empleados) {
+    public void setEmpleados(Set<Empleado> empleados) {
         this.empleados = empleados;
     }
 
