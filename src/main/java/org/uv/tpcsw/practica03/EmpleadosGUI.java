@@ -4,17 +4,57 @@
  */
 package org.uv.tpcsw.practica03;
 
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author josegtz
  */
 public class EmpleadosGUI extends javax.swing.JInternalFrame {
+    private DAODepartamento depto;
+    private DefaultTableModel tableModel;
+    private List<Departamento> departamentos;
+    private DAOEmpleado emp;
 
     /**
      * Creates new form EmpleadosGUI
      */
     public EmpleadosGUI() {
         initComponents();
+        tableModel = new DefaultTableModel(new Object[]{"Clave", "Nombre", "Direccion", "Telefono", "DepartamentoID"}, 0);
+        tablaEmpleados.setModel(tableModel);
+        depto = new DAODepartamento();
+        emp = new DAOEmpleado();
+        cargarDepartamentos();
+        cargarEmpleados();
+    }
+    
+    private void cargarDepartamentos() {
+        // Obtén todos los departamentos desde el DAO
+        departamentos = depto.findAll();  
+        jComboBox1.removeAllItems();  
+        
+        // Agrega los nombres de los departamentos al JComboBox
+        for (Departamento depto : departamentos) {
+            jComboBox1.addItem(depto.getNombre());
+        }
+    }
+    
+    private void cargarEmpleados() {
+        tableModel.setRowCount(0); // Limpiar tabla
+        List<Empleado> empleados = emp.findAll(); 
+        
+        for (Empleado emps : empleados) {
+            String departamentoNombre = emps.getDepto() != null ? emps.getDepto().getNombre() : "Sin Departamento";
+            tableModel.addRow(new Object[]{
+                emps.getClave(),
+                emps.getNombre(),
+                emps.getDireccion(),
+                emps.getTelefono(),
+                departamentoNombre // Mostramos el nombre del departamento
+            });
+        }
     }
 
     /**
@@ -26,23 +66,310 @@ public class EmpleadosGUI extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        textEmpNombre = new javax.swing.JTextField();
+        textEmpDireccion = new javax.swing.JTextField();
+        textEmpTelefono = new javax.swing.JTextField();
+        btnGuardar = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        btnModificar = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        textEmpClave = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaEmpleados = new javax.swing.JTable();
+
         setClosable(true);
+
+        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        jLabel1.setText("Empleados");
+
+        jLabel2.setText("Nombre:");
+
+        jLabel3.setText("Direccion:");
+
+        jLabel4.setText("Telefono:");
+
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Departamento:");
+
+        btnModificar.setText("Actualizar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Id:");
+
+        tablaEmpleados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaEmpleados);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6))
+                                .addGap(42, 42, 42)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(textEmpNombre)
+                                    .addComponent(textEmpDireccion)
+                                    .addComponent(textEmpTelefono)
+                                    .addComponent(jComboBox1, 0, 220, Short.MAX_VALUE)
+                                    .addComponent(textEmpClave))
+                                .addGap(61, 61, 61)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnGuardar)
+                                    .addComponent(btnBuscar))
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnEliminar)
+                                    .addComponent(btnModificar)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(127, 127, 127)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGuardar)
+                    .addComponent(btnModificar)
+                    .addComponent(jLabel6)
+                    .addComponent(textEmpClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnBuscar)
+                        .addComponent(btnEliminar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(textEmpNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(textEmpDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(textEmpTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        Empleado empleado = new Empleado();
+        empleado.setNombre(textEmpNombre.getText());
+        empleado.setDireccion(textEmpDireccion.getText());
+        empleado.setTelefono(textEmpTelefono.getText());
+        
+        int selectedIndex = jComboBox1.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            Departamento departamentoSeleccionado = departamentos.get(selectedIndex);
+            empleado.setDepto(departamentoSeleccionado);
+            
+            DAOEmpleado daoEmpleado = new DAOEmpleado();
+            daoEmpleado.save(empleado);
+            javax.swing.JOptionPane.showMessageDialog(this, "Empleado guardado exitosamente");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor selecciona un departamento.");
+        }
+        cargarEmpleados();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        // TODO add your handling code here:
+        String claveText = textEmpClave.getText();
+        if (claveText.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor ingresa la clave del empleado.");
+            return;
+        }
+        try {
+            long clave = Long.parseLong(claveText);
+            DAOEmpleado daoEmpleado = new DAOEmpleado();
+            Empleado empleado = daoEmpleado.findById(clave);
+            
+            if (empleado != null) {
+                empleado.setNombre(textEmpNombre.getText());
+                empleado.setDireccion(textEmpDireccion.getText());
+                empleado.setTelefono(textEmpTelefono.getText());
+                
+                int selectedIndex = jComboBox1.getSelectedIndex();
+                if (selectedIndex >= 0) {
+                    Departamento departamentoSeleccionado = departamentos.get(selectedIndex);
+                    empleado.setDepto(departamentoSeleccionado);
+                }
+                boolean actualizado = daoEmpleado.update(empleado, clave);
+                if (actualizado) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Empleado actualizado exitosamente.");
+                    cargarEmpleados();  // Refrescar la tabla
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "No se pudo actualizar el empleado.");
+                }
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Empleado no encontrado.");
+            }
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Clave inválida, por favor ingresa un número válido.");
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        String claveText = textEmpClave.getText();
+        
+        if (claveText.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor ingresa la clave del empleado.");
+            return;
+        }
+        
+        try {
+            long clave = Long.parseLong(claveText);
+            DAOEmpleado daoEmpleado = new DAOEmpleado();
+            Empleado empleado = daoEmpleado.findById(clave);
+            tableModel.setRowCount(0); // Limpiar la tabla
+        
+            if (empleado != null) {
+                textEmpNombre.setText(empleado.getNombre());
+                textEmpDireccion.setText(empleado.getDireccion());
+                textEmpTelefono.setText(empleado.getTelefono());
+
+            // Seleccionar el departamento en el JComboBox
+            if (empleado.getDepto() != null) {
+                // Buscar el índice del departamento en la lista de departamentos
+                for (int i = 0; i < departamentos.size(); i++) {
+                    if (departamentos.get(i).getClave() == empleado.getDepto().getClave()) {
+                        jComboBox1.setSelectedIndex(i);
+                        break;
+                    }
+                }
+            }
+
+            // Mostrar el empleado encontrado en la tabla
+            tableModel.addRow(new Object[]{empleado.getClave(), empleado.getNombre(), empleado.getDireccion(), empleado.getTelefono(), empleado.getDepto()});
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Empleado no encontrado.");
+        }
+    } catch (NumberFormatException e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Clave inválida, por favor ingresa un número válido.");
+    }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        String claveText = textEmpClave.getText();
+        if (claveText.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor ingresa la clave del empleado.");
+            return;
+        }
+        try {
+            long clave = Long.parseLong(claveText);
+            DAOEmpleado daoEmpleado = new DAOEmpleado();
+            
+            boolean eliminado = daoEmpleado.delete(clave);
+            if (eliminado) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Empleado eliminado exitosamente.");
+                cargarEmpleados(); // Actualizar la tabla de empleados
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Empleado no encontrado o no se pudo eliminar.");
+            }
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Clave inválida, por favor ingresa un número válido.");
+        }
+        cargarEmpleados();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tablaEmpleados;
+    private javax.swing.JTextField textEmpClave;
+    private javax.swing.JTextField textEmpDireccion;
+    private javax.swing.JTextField textEmpNombre;
+    private javax.swing.JTextField textEmpTelefono;
     // End of variables declaration//GEN-END:variables
 }
+//comenatario

@@ -4,18 +4,66 @@
  */
 package org.uv.tpcsw.practica03;
 
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
 /**
  *
  * @author josegtz
  */
 public class DepartamenotsGUI extends javax.swing.JInternalFrame {
+    private DefaultTableModel tableModel;
+    private DAODepartamento depto;
 
     /**
      * Creates new form DepartamenotsGUI
      */
     public DepartamenotsGUI() {
         initComponents();
+        tableModel = new DefaultTableModel(new Object[]{"Clave", "Nombre"}, 0);
+        tableDepartamentos.setModel(tableModel);
+        depto = new DAODepartamento();
+        loadDepartamentos();  
     }
+    
+    private void loadDepartamentos() {
+        tableModel.setRowCount(0); // Limpiar tabla
+        List<Departamento> departamentos = depto.findAll(); // Usar el DAO para obtener los departamentos
+        
+        for (Departamento dep : departamentos) {
+            tableModel.addRow(new Object[]{dep.getClave(), dep.getNombre()});
+        }
+    }
+    
+    private void buscarDepartamento() {
+        try {
+        String claveText = textDepClave.getText();
+        Long clave = Long.parseLong(claveText);
+
+        // Llamar al método findById del DAODepartamento
+        DAODepartamento dao = new DAODepartamento();
+        Departamento departamento = dao.findById(clave);
+
+        // Limpiar la tabla antes de mostrar el departamento
+        tableModel.setRowCount(0); // Limpia las filas actuales de la tabla
+
+        if (departamento != null) {
+            // Agregar el departamento encontrado a la tabla
+            tableModel.addRow(new Object[]{departamento.getClave(), departamento.getNombre()});
+            System.out.println("Departamento encontrado: " + departamento.getNombre());
+        } else {
+            System.out.println("No se encontró ningún departamento con la clave: " + clave);
+        }
+    } catch (NumberFormatException e) {
+        System.out.println("La clave ingresada no es válida. Debe ser un número.");
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.out.println("Ocurrió un error al buscar el departamento.");
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,23 +74,231 @@ public class DepartamenotsGUI extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        textDepClave = new javax.swing.JTextField();
+        textDepNombre = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableDepartamentos = new javax.swing.JTable();
+        btnDepGuardar = new javax.swing.JButton();
+        btnDepBuscar = new javax.swing.JButton();
+        btnDepModificar = new javax.swing.JButton();
+        btnDepEliminar = new javax.swing.JButton();
+
         setClosable(true);
+
+        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
+        jLabel1.setText("Departamentos");
+
+        jLabel2.setText("Clave:");
+
+        jLabel3.setText("Nombre:");
+
+        tableDepartamentos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tableDepartamentos);
+
+        btnDepGuardar.setText("Guardar");
+        btnDepGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDepGuardarActionPerformed(evt);
+            }
+        });
+
+        btnDepBuscar.setText("Buscar");
+        btnDepBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDepBuscarActionPerformed(evt);
+            }
+        });
+
+        btnDepModificar.setText("Modificar");
+        btnDepModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDepModificarActionPerformed(evt);
+            }
+        });
+
+        btnDepEliminar.setText("Eliminar");
+        btnDepEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDepEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(textDepClave, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                            .addComponent(textDepNombre))
+                        .addGap(58, 58, 58)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnDepModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnDepBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnDepGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnDepEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap(157, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(textDepClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(textDepNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDepGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(65, 65, 65))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnDepGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepGuardarActionPerformed
+        // TODO add your handling code here:
+        Departamento departamento = new Departamento();
+        departamento.setNombre(textDepNombre.getText());
+        
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session session = sf.getCurrentSession();
+        Transaction t = session.beginTransaction();
+        
+        session.save(departamento);
+        t.commit();
+        System.out.println("Departamento guardado correctamente.");
+        loadDepartamentos();
+    }//GEN-LAST:event_btnDepGuardarActionPerformed
+
+    private void btnDepEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepEliminarActionPerformed
+        // TODO add your handling code here:
+        String claveText = textDepClave.getText();
+        long clave = Long.parseLong(claveText);
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session session = sf.openSession();
+        
+        try {
+            Transaction transaction = session.beginTransaction();
+            Departamento departamento = session.get(Departamento.class, clave);
+            
+            if (departamento != null) {
+                session.delete(departamento);
+                transaction.commit();
+                System.out.println("Departamento eliminado correctamente.");
+            } else {
+                System.out.println("No se encontró ningún departamento con la clave: " + clave);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+        } finally {
+            session.close();
+            loadDepartamentos();
+        }
+        
+    }//GEN-LAST:event_btnDepEliminarActionPerformed
+
+    private void btnDepModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepModificarActionPerformed
+        // TODO add your handling code here:
+        try {
+        // Obtener el valor del JTextField y convertirlo a long
+        String claveText = textDepClave.getText();
+        long clave = Long.parseLong(claveText); // Convertimos el texto a long
+
+        // Crear una instancia de Departamento con el nuevo nombre
+        Departamento departamento = new Departamento();
+        departamento.setNombre(textDepNombre.getText());
+
+        // Llamar al método update del DAODepartamento
+        DAODepartamento dao = new DAODepartamento();
+        boolean actualizado = dao.update(departamento, clave);
+        if (actualizado) {
+            System.out.println("Departamento actualizado correctamente.");
+        } else {
+            System.out.println("No se encontró ningún departamento con la clave: " + clave);
+        }
+        } catch (NumberFormatException e) {
+            System.out.println("La clave ingresada no es válida.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Ocurrió un error al actualizar el departamento.");
+        }
+        loadDepartamentos();
+    }//GEN-LAST:event_btnDepModificarActionPerformed
+
+    private void btnDepBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepBuscarActionPerformed
+        // TODO add your handling code here:
+        try{
+            String claveText = textDepClave.getText();
+            Long clave = Long.parseLong(claveText);
+            DAODepartamento dao = new DAODepartamento();
+            Departamento departamento = dao.findById(clave);
+            
+            tableModel.setRowCount(0);
+            if (departamento != null) {
+                tableModel.addRow(new Object[]{departamento.getClave(), departamento.getNombre()});
+                System.out.println("Departamento encontrado: " + departamento.getNombre());
+            } else {
+                System.out.println("No se encontró ningún departamento con la clave: " + clave);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("La clave ingresada no es válida. Debe ser un número.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Ocurrió un error al buscar el departamento.");
+        }    
+    }//GEN-LAST:event_btnDepBuscarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDepBuscar;
+    private javax.swing.JButton btnDepEliminar;
+    private javax.swing.JButton btnDepGuardar;
+    private javax.swing.JButton btnDepModificar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tableDepartamentos;
+    private javax.swing.JTextField textDepClave;
+    private javax.swing.JTextField textDepNombre;
     // End of variables declaration//GEN-END:variables
 }
+//comenatario

@@ -150,3 +150,4 @@ public class PrincipalGUI extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     // End of variables declaration//GEN-END:variables
 }
+//comenatario
