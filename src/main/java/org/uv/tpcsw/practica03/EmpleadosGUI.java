@@ -28,6 +28,34 @@ public class EmpleadosGUI extends javax.swing.JInternalFrame {
         emp = new DAOEmpleado();
         cargarDepartamentos();
         cargarEmpleados();
+        
+        // Agregar un ListSelectionListener para llenar los campos al seleccionar una fila
+        tablaEmpleados.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting() && tablaEmpleados.getSelectedRow() != -1) {
+                llenarCampos(tablaEmpleados.getSelectedRow());
+            }
+        });
+    }
+    
+    private void llenarCampos(int rowIndex) {
+        Long clave = (Long) tableModel.getValueAt(rowIndex, 0);
+        String nombre = (String) tableModel.getValueAt(rowIndex, 1);
+        String direccion = (String) tableModel.getValueAt(rowIndex, 2);
+        String telefono = (String) tableModel.getValueAt(rowIndex, 3);
+        String departamentoNombre = (String) tableModel.getValueAt(rowIndex, 4);
+        
+        textEmpClave.setText(clave.toString());
+        textEmpNombre.setText(nombre);
+        textEmpDireccion.setText(direccion);
+        textEmpTelefono.setText(telefono);
+
+        // Este es el que hace la magia
+        for (int i = 0; i < departamentos.size(); i++) {
+            if (departamentos.get(i).getNombre().equals(departamentoNombre)) {
+                jComboBox1.setSelectedIndex(i);
+                break;
+            }
+        }
     }
     
     private void cargarDepartamentos() {
@@ -262,28 +290,37 @@ public class EmpleadosGUI extends javax.swing.JInternalFrame {
             Empleado empleado = daoEmpleado.findById(clave);
             
             if (empleado != null) {
-                empleado.setNombre(textEmpNombre.getText());
-                empleado.setDireccion(textEmpDireccion.getText());
-                empleado.setTelefono(textEmpTelefono.getText());
+            // Actualizar los datos del empleado
+            empleado.setNombre(textEmpNombre.getText());
+            empleado.setDireccion(textEmpDireccion.getText());
+            empleado.setTelefono(textEmpTelefono.getText());
+            
+            // Obtener el departamento seleccionado y asignarlo al empleado
+            int selectedIndex = jComboBox1.getSelectedIndex();
+            if (selectedIndex >= 0) {
+                Departamento departamentoSeleccionado = departamentos.get(selectedIndex);
                 
-                int selectedIndex = jComboBox1.getSelectedIndex();
-                if (selectedIndex >= 0) {
-                    Departamento departamentoSeleccionado = departamentos.get(selectedIndex);
-                    empleado.setDepto(departamentoSeleccionado);
-                }
-                boolean actualizado = daoEmpleado.update(empleado, clave);
-                if (actualizado) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Empleado actualizado exitosamente.");
-                    cargarEmpleados();  // Refrescar la tabla
-                } else {
-                    javax.swing.JOptionPane.showMessageDialog(this, "No se pudo actualizar el empleado.");
-                }
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Empleado no encontrado.");
+                // Buscar el departamento exacto en la base de datos antes de asignarlo
+                Departamento deptoActualizado = depto.findById(departamentoSeleccionado.getClave());
+                
+                // Asigna el departamento actualizado al empleado
+                empleado.setDepto(deptoActualizado);
             }
-        } catch (NumberFormatException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Clave inválida, por favor ingresa un número válido.");
+
+            // Ejecutar la actualización en la base de datos
+            boolean actualizado = daoEmpleado.update(empleado, clave);
+            if (actualizado) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Empleado actualizado exitosamente.");
+                cargarEmpleados();  // Refrescar la tabla
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "No se pudo actualizar el empleado.");
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Empleado no encontrado.");
         }
+    } catch (NumberFormatException e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Clave inválida, por favor ingresa un número válido.");
+    }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -372,4 +409,3 @@ public class EmpleadosGUI extends javax.swing.JInternalFrame {
     private javax.swing.JTextField textEmpTelefono;
     // End of variables declaration//GEN-END:variables
 }
-//comenatario

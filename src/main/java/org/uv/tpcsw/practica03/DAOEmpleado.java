@@ -46,30 +46,36 @@ public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
 
     @Override
     public boolean update(Empleado pojo, Long id) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction t = session.beginTransaction();
-        try {
-            Empleado empleado = session.get(Empleado.class, id);
-            if (empleado != null) {
-                empleado.setClave(pojo.getClave());
-                empleado.setNombre(pojo.getNombre()); // Aquí puedes modificar según los campos que necesites actualizar
-                empleado.setDireccion(pojo.getDireccion());
-                empleado.setTelefono(pojo.getTelefono());
-
-                session.update(empleado);
-                t.commit();
-                return true;
+    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+    Transaction t = session.beginTransaction();
+    try {
+        Empleado empleado = session.get(Empleado.class, id);
+        if (empleado != null) {
+            empleado.setClave(pojo.getClave());
+            empleado.setNombre(pojo.getNombre());
+            empleado.setDireccion(pojo.getDireccion());
+            empleado.setTelefono(pojo.getTelefono());
+            
+            if (pojo.getDepto() != null) {
+                Departamento nuevoDepto = session.get(Departamento.class, pojo.getDepto().getClave());
+                empleado.setDepto(nuevoDepto);
             } else {
-                t.rollback();
-                return false;
+                empleado.setDepto(null);  // Si no hay departamento seleccionado, asigna null
             }
-        } catch (Exception e) {
+            session.update(empleado);
+            t.commit();
+            return true;
+        } else {
             t.rollback();
-            e.printStackTrace();
             return false;
-        } finally {
-            session.close();
         }
+    } catch (Exception e) {
+        t.rollback();
+        e.printStackTrace();
+        return false;
+    } finally {
+        session.close();
+    }
     }
 
     @Override
@@ -109,4 +115,3 @@ public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
     }
 
 }
-//comenatario

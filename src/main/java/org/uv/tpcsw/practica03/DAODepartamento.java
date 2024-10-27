@@ -106,4 +106,4 @@ public class DAODepartamento implements IDAOGeneral<Departamento, Long>{
         }
     }
 }
-//comenatario
+

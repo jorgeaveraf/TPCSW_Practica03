@@ -26,7 +26,23 @@ public class DepartamenotsGUI extends javax.swing.JInternalFrame {
         tableModel = new DefaultTableModel(new Object[]{"Clave", "Nombre"}, 0);
         tableDepartamentos.setModel(tableModel);
         depto = new DAODepartamento();
-        loadDepartamentos();  
+        loadDepartamentos();
+        
+        tableDepartamentos.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting() && tableDepartamentos.getSelectedRow() != -1) {
+                llenarCampos(tableDepartamentos.getSelectedRow());
+            }
+        });
+    }
+    
+    private void llenarCampos(int selectedRow) {
+        if (selectedRow >= 0) {
+        String clave = tableModel.getValueAt(selectedRow, 0).toString();
+        String nombre = tableModel.getValueAt(selectedRow, 1).toString();
+
+        textDepClave.setText(clave);
+        textDepNombre.setText(nombre);
+        }
     }
     
     private void loadDepartamentos() {
@@ -301,4 +317,3 @@ public class DepartamenotsGUI extends javax.swing.JInternalFrame {
     private javax.swing.JTextField textDepNombre;
     // End of variables declaration//GEN-END:variables
 }
-//comenatario
