@@ -1,2 +1,14 @@
 /target/
-src/main/resources
+/src/main/resources
+# Ignora los archivos de compilación
+*.class
+
+# Ignora archivos de sistema y carpetas generadas
+.idea/
+.DS_Store
+*.log
+
+# Ignora archivos de salida comunes en Java
+*.jar
+*.war
+*.ear
