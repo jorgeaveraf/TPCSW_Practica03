@@ -4,6 +4,8 @@ package org.uv.tpcsw.practica03;
 import java.io.Serializable;
 
 import javax.annotation.processing.Generated;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,7 +32,8 @@ public class Empleado implements Serializable {
     @Column
     private String telefono;
   
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.MERGE)
+
     @JoinColumn(name = "departamento_clave")
     private Departamento depto;
 

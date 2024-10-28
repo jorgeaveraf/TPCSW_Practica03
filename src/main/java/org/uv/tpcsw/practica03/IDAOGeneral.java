@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  *
- * @author habacuc
+ * @author josegtz
  */
 public interface IDAOGeneral <T, ID>{
       public boolean save(T pojo);
@@ -16,4 +16,6 @@ public interface IDAOGeneral <T, ID>{
     public boolean update(T pojo, ID id);
     public List<T> findAll();
     public T findById(ID id);
+
 }
+

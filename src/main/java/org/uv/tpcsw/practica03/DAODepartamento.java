@@ -1,19 +1,21 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package org.uv.tpcsw.practica03;
 
 import java.util.List;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 /**
  *
  * @author josegtz
-**/
-public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
-
+ */
+public class DAODepartamento implements IDAOGeneral<Departamento, Long>{
     @Override
-    public boolean save(Empleado pojo) {
+    public boolean save(Departamento pojo) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = session.beginTransaction();
         session.save(pojo);
@@ -26,9 +28,9 @@ public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = session.beginTransaction();
         try {
-            Empleado empleado = session.get(Empleado.class, id);
-            if (empleado != null) {
-                session.delete(empleado);
+            Departamento departamento = session.get(Departamento.class, id);
+            if (departamento != null) {
+                session.delete(departamento);
                 t.commit();
                 return true;
             } else {
@@ -45,50 +47,38 @@ public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
     }
 
     @Override
-    public boolean update(Empleado pojo, Long id) {
-
-    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-    Transaction t = session.beginTransaction();
-    try {
-        Empleado empleado = session.get(Empleado.class, id);
-        if (empleado != null) {
-            empleado.setClave(pojo.getClave());
-            empleado.setNombre(pojo.getNombre());
-            empleado.setDireccion(pojo.getDireccion());
-            empleado.setTelefono(pojo.getTelefono());
-            
-            if (pojo.getDepto() != null) {
-                Departamento nuevoDepto = session.get(Departamento.class, pojo.getDepto().getClave());
-                empleado.setDepto(nuevoDepto);
+    public boolean update(Departamento pojo, Long id) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = session.beginTransaction();
+        try {
+            Departamento departamento = session.get(Departamento.class, id);
+            if (departamento != null) {
+                departamento.setNombre(pojo.getNombre()); // Aquí puedes modificar según los campos que necesites actualizar
+                session.update(departamento);
+                t.commit();
+                return true;
             } else {
-                empleado.setDepto(null);  // Si no hay departamento seleccionado, asigna null
+                t.rollback();
+                return false;
             }
-            session.update(empleado);
-            t.commit();
-            return true;
-        } else {
+        } catch (Exception e) {
             t.rollback();
+            e.printStackTrace();
             return false;
+        } finally {
+            session.close();
         }
-    } catch (Exception e) {
-        t.rollback();
-        e.printStackTrace();
-        return false;
-    } finally {
-        session.close();
-    }
     }
 
     @Override
-    public List<Empleado> findAll() {
+    public List<Departamento> findAll() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = session.beginTransaction();
         try {
-            Query<Empleado> query = session.createQuery("FROM Empleado", Empleado.class);
-
-            List<Empleado> empleados = query.getResultList();
+            Query<Departamento> query = session.createQuery("FROM Departamento", Departamento.class);
+            List<Departamento> departamentos = query.getResultList();
             t.commit();
-            return empleados;
+            return departamentos;
         } catch (Exception e) {
             t.rollback();
             e.printStackTrace();
@@ -100,13 +90,13 @@ public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
     }
 
     @Override
-    public Empleado findById(Long id) {
+    public Departamento findById(Long id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = session.beginTransaction();
         try {
-            Empleado empleado = session.get(Empleado.class, id);
+            Departamento departamento = session.get(Departamento.class, id);
             t.commit();
-            return empleado;
+            return departamento;
         } catch (Exception e) {
             t.rollback();
             e.printStackTrace();
@@ -115,5 +105,5 @@ public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
             session.close();
         }
     }
-
 }
+
