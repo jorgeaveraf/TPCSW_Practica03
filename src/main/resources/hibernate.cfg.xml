@@ -18,3 +18,4 @@
        <mapping class="org.uv.tpcsw.practica03.Empleado"/>
        <mapping class="org.uv.tpcsw.practica03.Departamento"/>
    </session-factory>
+ </hibernate-configuration>
