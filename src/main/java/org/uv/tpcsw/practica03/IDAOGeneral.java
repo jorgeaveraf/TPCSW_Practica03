@@ -16,5 +16,6 @@ public interface IDAOGeneral <T, ID>{
     public boolean update(T pojo, ID id);
     public List<T> findAll();
     public T findById(ID id);
+
 }
-//comenatario
+

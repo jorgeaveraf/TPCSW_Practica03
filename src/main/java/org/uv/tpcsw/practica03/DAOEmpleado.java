@@ -9,7 +9,7 @@ import org.hibernate.query.Query;
 /**
  *
  * @author josegtz
- */
+**/
 public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
 
     @Override
@@ -46,6 +46,7 @@ public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
 
     @Override
     public boolean update(Empleado pojo, Long id) {
+
     Session session = HibernateUtil.getSessionFactory().getCurrentSession();
     Transaction t = session.beginTransaction();
     try {
@@ -84,6 +85,7 @@ public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
         Transaction t = session.beginTransaction();
         try {
             Query<Empleado> query = session.createQuery("FROM Empleado", Empleado.class);
+
             List<Empleado> empleados = query.getResultList();
             t.commit();
             return empleados;
